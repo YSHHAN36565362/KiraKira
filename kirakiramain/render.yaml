@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: kirakira-pilgrimage
+    runtime: docker
+    dockerfilePath: ./pilgrimage/Dockerfile
+    dockerContext: ./pilgrimage
+    plan: free
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
