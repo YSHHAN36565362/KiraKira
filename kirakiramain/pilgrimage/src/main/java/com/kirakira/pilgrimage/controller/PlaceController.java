@@ -6,6 +6,7 @@ import com.kirakira.pilgrimage.dto.PlaceResponse;
 import com.kirakira.pilgrimage.service.PlaceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,5 +58,16 @@ public class PlaceController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         placeService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/api/admin/places/download")
+    public ResponseEntity<byte[]> downloadCsv() {
+        byte[] csvBytes = placeService.exportCsv();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.parseMediaType("text/csv"));
+        headers.setContentDispositionFormData("attachment", "place_report.csv");
+
+        return ResponseEntity.ok().headers(headers).body(csvBytes);
     }
 }

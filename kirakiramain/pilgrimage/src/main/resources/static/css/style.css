@@ -475,13 +475,13 @@ body {
   text-align: center;
   padding: 24px;
   background:
-          repeating-linear-gradient(
-                  135deg,
-                  var(--surface-alt) 0px,
-                  var(--surface-alt) 10px,
-                  var(--surface) 10px,
-                  var(--surface) 20px
-          );
+    repeating-linear-gradient(
+      135deg,
+      var(--surface-alt) 0px,
+      var(--surface-alt) 10px,
+      var(--surface) 10px,
+      var(--surface) 20px
+    );
 }
 
 .map-fallback .fallback-icon {
@@ -516,7 +516,7 @@ body {
   opacity: 0;
   transform: scale(0.96);
   transition: opacity 0.2s var(--ease), transform 0.2s var(--ease), overlay 0.2s allow-discrete,
-  display 0.2s allow-discrete;
+    display 0.2s allow-discrete;
 }
 
 .modal[open] {

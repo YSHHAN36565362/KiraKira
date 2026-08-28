@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -71,6 +72,40 @@ public class PlaceService {
     public void delete(Long id) {
         Place place = findPlaceOrThrow(id);
         placeRepository.delete(place);
+    }
+
+    public byte[] exportCsv() {
+        List<Place> places = placeRepository.findAll();
+
+        StringBuilder csv = new StringBuilder();
+        csv.append('﻿'); // 엑셀에서 한글이 깨지지 않도록 하는 BOM
+        csv.append("ID,미디어유형,작품명,장소명,지역,주소,위도,경도,평균평점,리뷰수\n");
+
+        for (Place place : places) {
+            ReviewRepository.RatingSummary summary = reviewRepository.summarizeByPlaceId(place.getId());
+            csv.append(place.getId()).append(",")
+                    .append(escapeCsv(place.getMediaType().name())).append(",")
+                    .append(escapeCsv(place.getWorkTitle())).append(",")
+                    .append(escapeCsv(place.getPlaceName())).append(",")
+                    .append(escapeCsv(place.getRegion())).append(",")
+                    .append(escapeCsv(place.getAddress())).append(",")
+                    .append(place.getLatitude()).append(",")
+                    .append(place.getLongitude()).append(",")
+                    .append(summary.getAverageRating()).append(",")
+                    .append(summary.getReviewCount()).append("\n");
+        }
+
+        return csv.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private String escapeCsv(String value) {
+        if (value == null) {
+            return "";
+        }
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
     }
 
     private Place findPlaceOrThrow(Long id) {

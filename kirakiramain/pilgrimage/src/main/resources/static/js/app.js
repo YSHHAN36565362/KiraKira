@@ -410,8 +410,8 @@ function renderPlaces(places) {
   placeListEl.innerHTML = places.map((place, index) => {
     const thumbSrc = place.realImageUrl || place.animeImageUrl;
     const thumbHtml = thumbSrc
-        ? `<img class="card-thumb" src="${escapeHtml(thumbSrc)}" alt="" loading="lazy" onerror="this.remove()">`
-        : "";
+      ? `<img class="card-thumb" src="${escapeHtml(thumbSrc)}" alt="" loading="lazy" onerror="this.remove()">`
+      : "";
     return `
     <article class="place-card" data-place-id="${place.id}" style="--i:${Math.min(index, 10)}">
       ${thumbHtml}
@@ -571,8 +571,8 @@ reviewForm.addEventListener("submit", async (event) => {
   });
 
   const url = currentUserReviewId
-      ? `/api/reviews/${currentUserReviewId}`
-      : `/api/places/${currentDetailPlaceId}/reviews`;
+    ? `/api/reviews/${currentUserReviewId}`
+    : `/api/places/${currentDetailPlaceId}/reviews`;
   const method = currentUserReviewId ? "PUT" : "POST";
 
   const response = await fetch(url, {
@@ -852,11 +852,11 @@ function dashRenderTable(places) {
   dashPlaceTbody.innerHTML = places.map((place) => {
     const isFav = favoritePlaceIds.has(place.id);
     const actionsHtml = isAdmin
-        ? `
+      ? `
         <button type="button" class="btn btn-secondary dash-edit-btn" data-place-id="${place.id}">수정</button>
         <button type="button" class="btn btn-primary dash-delete-btn" data-place-id="${place.id}">삭제</button>
       `
-        : `<button type="button" class="btn btn-secondary dash-view-btn" data-place-id="${place.id}">상세</button>`;
+      : `<button type="button" class="btn btn-secondary dash-view-btn" data-place-id="${place.id}">상세</button>`;
 
     return `
     <tr data-place-id="${place.id}">
