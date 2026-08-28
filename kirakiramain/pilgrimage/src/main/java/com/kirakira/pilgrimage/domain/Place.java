@@ -7,7 +7,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,7 +46,7 @@ public class Place {
     @Column(nullable = false)
     private Double longitude;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(length = 500)
