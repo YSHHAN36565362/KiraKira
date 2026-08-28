@@ -31,4 +31,4 @@ insert into place (media_type, work_title, place_name, region, address, latitude
 ('ANIME', '봇치 더 락', '이시바시 악기 오차노미즈 본점', '도쿄 치요다', 'Kanda-Surugadai 2-2, Chiyoda, Tokyo', 35.6979, 139.7654, '고토 히토리의 새 기타를 사러 가는 장면의 배경지', 'https://livedoor.blogimg.jp/fly_ask/imgs/2/7/279419f8.jpg', 'https://anime-pilgrimage.com/wp-content/uploads/2025/09/batch_bocchi-the-rock-ishibashi-gakki-ochanomizu-exterior.jpg', now(), now());
 
 insert into app_user (email, password, nickname, role, created_at) values
-('admin@kirakira.com', '$2a$10$.dqDI2m1mcMv4o4Ga85k9eL1km7MxguO.GFl8Kq/weya3y.9EaB9a', '관리자', 'ADMIN', now());
+('admin@gmail.com', '$2a$10$4IWcNaCOuxA3KtuGcQN.lOudbSPVzzg8hDSS5aUyN6whCSPNkhxLC', '관리자', 'ADMIN', now());
