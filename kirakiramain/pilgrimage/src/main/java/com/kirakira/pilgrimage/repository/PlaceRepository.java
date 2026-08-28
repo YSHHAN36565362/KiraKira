@@ -15,9 +15,9 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             where (:mediaType is null or p.mediaType = :mediaType)
               and (
                     :keyword is null
-                    or lower(p.workTitle) like lower(concat('%', :keyword, '%'))
-                    or lower(p.placeName) like lower(concat('%', :keyword, '%'))
-                    or lower(p.region) like lower(concat('%', :keyword, '%'))
+                    or lower(p.workTitle) like lower(concat('%', cast(:keyword as string), '%'))
+                    or lower(p.placeName) like lower(concat('%', cast(:keyword as string), '%'))
+                    or lower(p.region) like lower(concat('%', cast(:keyword as string), '%'))
                   )
             order by p.id desc
             """)
