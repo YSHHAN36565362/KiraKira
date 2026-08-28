@@ -70,4 +70,16 @@ public class PlaceController {
 
         return ResponseEntity.ok().headers(headers).body(csvBytes);
     }
+
+    @GetMapping("/api/admin/places/download/excel")
+    public ResponseEntity<byte[]> downloadExcel() {
+        byte[] excelBytes = placeService.exportExcel();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(org.springframework.http.MediaType.parseMediaType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", "place_report.xlsx");
+
+        return ResponseEntity.ok().headers(headers).body(excelBytes);
+    }
 }
