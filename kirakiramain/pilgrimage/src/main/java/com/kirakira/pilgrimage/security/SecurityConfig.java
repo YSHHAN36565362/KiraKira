@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/error").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/places", "/api/places/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/admin/places/download", "/api/admin/places/download/excel").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

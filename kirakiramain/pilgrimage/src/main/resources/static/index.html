@@ -140,6 +140,8 @@
         <div class="card-title-row">
           <h2 class="card-title">성지순례 장소 리스트</h2>
           <span id="dash-result-count" class="dash-result-count"></span>
+          <a id="dash-download-csv-btn" class="link-btn" href="/api/admin/places/download">⬇ CSV 다운로드</a>
+          <a id="dash-download-excel-btn" class="link-btn" href="/api/admin/places/download/excel">⬇ 엑셀 다운로드</a>
         </div>
         <hr class="card-hr">
 
@@ -281,8 +283,6 @@
     <hr class="divider">
     <div class="detail-header">
       <h3>전체 장소 (<span id="admin-place-count">0</span>건)</h3>
-      <a id="admin-download-csv-btn" class="link-btn" href="/api/admin/places/download">⬇ CSV 다운로드</a>
-      <a id="admin-download-excel-btn" class="link-btn" href="/api/admin/places/download/excel">⬇ 엑셀 다운로드</a>
     </div>
     <div id="admin-place-list" class="admin-place-list"></div>
   </div>
