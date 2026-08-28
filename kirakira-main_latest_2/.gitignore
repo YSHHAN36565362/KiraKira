@@ -1,0 +1,17 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Gradle ###
+.gradle/
+build/
+
+### VS Code ###
+.vscode/
+
+### Mac/Windows OS ###
+.DS_Store
+Thumbs.db

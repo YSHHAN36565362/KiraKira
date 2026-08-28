@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>키라키라 성지순례</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- ============ 페이지 전환 탭 (1 / 2) ============ -->
+<nav class="page-switch" role="tablist" aria-label="페이지 전환">
+  <button type="button" class="page-switch-btn active" id="page-tab-1" data-page="1" role="tab" aria-selected="true">1</button>
+  <button type="button" class="page-switch-btn" id="page-tab-2" data-page="2" role="tab" aria-selected="false">2</button>
+</nav>
+
+<!-- ============ PAGE 1: 기존 덕질 지도 (그대로) ============ -->
+<section id="page-1" class="page-view">
+  <div class="app-shell">
+    <header class="topbar">
+      <button type="button" id="brand-link" class="brand-block">
+        <span class="brand-mark" aria-hidden="true">✦✦</span>
+        <span class="brand-text">
+          <h1 class="brand">키라키라 성지순례</h1>
+          <p class="brand-sub">Seishi Junrei Archive · 발견과 기억의 여행 노트</p>
+        </span>
+      </button>
+      <div class="topbar-actions">
+        <span id="auth-status" class="auth-status"></span>
+        <button id="login-btn" class="link-btn" type="button">로그인</button>
+        <button id="signup-btn" class="link-btn" type="button">회원가입</button>
+        <button id="my-favorites-btn" class="link-btn" type="button" hidden>내 즐겨찾기</button>
+        <button id="admin-btn" class="link-btn" type="button" hidden>장소 관리</button>
+        <button id="logout-btn" class="link-btn" type="button" hidden>로그아웃</button>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="테마 전환">Dark</button>
+      </div>
+    </header>
+
+    <main class="explore-table">
+      <section class="map-canvas-wrap">
+        <div id="map-canvas" class="map-canvas"></div>
+      </section>
+
+      <div class="side-panel">
+        <section class="search-ticket">
+          <select id="media-type" aria-label="매체 선택">
+            <option value="">전체 매체</option>
+            <option value="ANIME">애니메이션</option>
+            <option value="MOVIE">영화</option>
+            <option value="DRAMA">드라마</option>
+          </select>
+          <input id="keyword" type="text" placeholder="작품명, 장소, 지역으로 검색">
+          <button id="search-btn" type="button">검색</button>
+        </section>
+
+        <section class="card-drawer">
+          <div class="section-label">
+            <span class="coord-tag">Travel Card Drawer</span>
+            <h2>여행 카드 서랍</h2>
+            <p id="result-count" class="result-count"></p>
+          </div>
+          <div id="place-list" class="place-list"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ PAGE 2: 대시보드 스타일 (양식 적용) ============ -->
+<section id="page-2" class="page-view" hidden>
+  <div class="dash-body">
+
+    <header class="top-navbar">
+      <h2>✦ 키라키라 성지순례 · 아카이브</h2>
+      <div class="nav-actions">
+        <span id="dash-auth-status" class="dash-welcome"></span>
+        <select id="dash-media-type" aria-label="매체 선택">
+          <option value="">전체 매체</option>
+          <option value="ANIME">애니메이션</option>
+          <option value="MOVIE">영화</option>
+          <option value="DRAMA">드라마</option>
+        </select>
+        <input id="dash-keyword" type="text" placeholder="작품명, 장소, 지역으로 검색">
+        <button class="btn btn-primary" id="dash-search-btn">🔍 검색</button>
+        <button class="btn btn-secondary" id="dash-admin-btn" hidden>⚙ 장소 관리</button>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- 좌측: 등록/필터 카드 -->
+      <div class="card">
+        <h2 id="dashFormTitle" class="card-title">장소 등록</h2>
+        <hr class="card-hr">
+
+        <input type="hidden" id="dash-place-id">
+        <div class="form-group">
+          <label>매체 종류</label>
+          <select id="dash-admin-media-type">
+            <option value="ANIME">애니메이션</option>
+            <option value="MOVIE">영화</option>
+            <option value="DRAMA">드라마</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>작품명</label>
+          <input type="text" id="dash-admin-work-title" placeholder="예: 목소리의 형태" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label>장소명</label>
+          <input type="text" id="dash-admin-place-name" placeholder="예: 오가키역" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label>지역</label>
+          <input type="text" id="dash-admin-region" placeholder="예: 기후현 오가키" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label>주소</label>
+          <input type="text" id="dash-admin-address" placeholder="상세 주소" maxlength="255">
+        </div>
+        <div class="form-group">
+          <label>위도 / 경도</label>
+          <div class="form-row-2">
+            <input type="number" step="any" id="dash-admin-latitude" placeholder="위도">
+            <input type="number" step="any" id="dash-admin-longitude" placeholder="경도">
+          </div>
+        </div>
+
+        <button id="dash-submit-btn" class="btn btn-primary btn-block">DB에 등록하기</button>
+        <button id="dash-cancel-btn" class="btn btn-secondary btn-block" style="display:none;">수정 취소</button>
+      </div>
+
+      <!-- 우측: 성지순례 장소 리스트 테이블 -->
+      <div class="card">
+        <div class="card-title-row">
+          <h2 class="card-title">성지순례 장소 리스트</h2>
+          <span id="dash-result-count" class="dash-result-count"></span>
+        </div>
+        <hr class="card-hr">
+
+        <div class="table-scroll">
+          <table id="dashPlaceTable">
+            <thead>
+            <tr>
+              <th>매체</th>
+              <th>작품명</th>
+              <th>장소명</th>
+              <th>지역</th>
+              <th>평점</th>
+              <th>즐겨찾기</th>
+              <th>관리</th>
+            </tr>
+            </thead>
+            <tbody id="dash-place-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 공용 모달 (1페이지 로그인/회원가입/상세/관리) ============ -->
+<dialog id="auth-dialog" class="modal">
+  <form id="login-form" class="modal-form">
+    <h2>로그인</h2>
+    <input type="email" id="login-email" placeholder="이메일" autocomplete="username" required>
+    <input type="password" id="login-password" placeholder="비밀번호" autocomplete="current-password" required>
+    <p class="form-error" id="login-error"></p>
+    <div class="modal-actions">
+      <button type="submit" class="primary-btn">로그인</button>
+      <button type="button" class="link-btn" data-close-dialog>닫기</button>
+    </div>
+  </form>
+
+  <form id="signup-form" class="modal-form" hidden>
+    <h2>회원가입</h2>
+    <input type="email" id="signup-email" placeholder="이메일" autocomplete="username" required>
+    <input type="password" id="signup-password" placeholder="비밀번호 (8자 이상)" autocomplete="new-password" required minlength="8">
+    <input type="text" id="signup-nickname" placeholder="닉네임" required maxlength="50">
+    <p class="form-error" id="signup-error"></p>
+    <div class="modal-actions">
+      <button type="submit" class="primary-btn">가입하기</button>
+      <button type="button" class="link-btn" data-close-dialog>닫기</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="place-dialog" class="modal place-modal">
+  <div class="modal-form">
+    <div class="detail-header">
+      <span id="detail-media-type" class="media-type"></span>
+      <button type="button" class="link-btn" data-close-dialog>닫기</button>
+    </div>
+    <h2 id="detail-place-name"></h2>
+    <p id="detail-work-title" class="work-title"></p>
+
+    <div id="detail-images" class="place-images">
+      <figure class="place-image-slot" id="detail-real-figure" hidden>
+        <img id="detail-real-image" alt="실제 촬영 사진">
+        <figcaption>실제 사진</figcaption>
+      </figure>
+      <figure class="place-image-slot" id="detail-anime-figure" hidden>
+        <img id="detail-anime-image" alt="작품 이미지">
+        <figcaption>작품 이미지</figcaption>
+      </figure>
+    </div>
+
+    <p id="detail-description" class="detail-description"></p>
+    <p id="detail-meta" class="meta"></p>
+    <button id="favorite-toggle" type="button" class="favorite-btn">
+      <span class="stamp-dot" aria-hidden="true"></span>
+      <span id="favorite-toggle-label">즐겨찾기 추가</span>
+    </button>
+
+    <hr class="divider">
+
+    <h3>리뷰 (<span id="review-count">0</span>건, 평균 <span id="review-average">-</span>)</h3>
+    <div id="review-list" class="review-list"></div>
+
+    <form id="review-form" class="review-form">
+      <p id="review-login-notice" class="form-hint" hidden>리뷰를 작성하려면 로그인해 주세요.</p>
+      <div id="review-fields">
+        <label class="rating-label">
+          별점
+          <select id="review-rating">
+            <option value="5">5</option>
+            <option value="4">4</option>
+            <option value="3">3</option>
+            <option value="2">2</option>
+            <option value="1">1</option>
+          </select>
+        </label>
+        <textarea id="review-content" placeholder="이 장소에 대한 리뷰를 남겨보세요" maxlength="1000"></textarea>
+        <p class="form-error" id="review-error"></p>
+        <div class="modal-actions">
+          <button type="submit" id="review-submit-btn" class="primary-btn">리뷰 등록</button>
+          <button type="button" id="review-delete-btn" class="link-btn" hidden>내 리뷰 삭제</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="admin-dialog" class="modal admin-modal">
+  <div class="modal-form">
+    <div class="detail-header">
+      <h2>장소 관리</h2>
+      <button type="button" class="link-btn" data-close-dialog>닫기</button>
+    </div>
+
+    <form id="admin-place-form" class="admin-place-form">
+      <input type="hidden" id="admin-place-id">
+      <div class="admin-form-grid">
+        <select id="admin-media-type" required>
+          <option value="ANIME">애니메이션</option>
+          <option value="MOVIE">영화</option>
+          <option value="DRAMA">드라마</option>
+        </select>
+        <input id="admin-work-title" type="text" placeholder="작품명" required maxlength="100">
+        <input id="admin-place-name" type="text" placeholder="장소명" required maxlength="100">
+        <input id="admin-region" type="text" placeholder="지역 (예: 도쿄 신주쿠)" maxlength="100">
+        <input id="admin-address" type="text" placeholder="주소" maxlength="255">
+        <input id="admin-latitude" type="number" step="any" placeholder="위도" required>
+        <input id="admin-longitude" type="number" step="any" placeholder="경도" required>
+      </div>
+      <textarea id="admin-description" placeholder="장소 설명" maxlength="2000"></textarea>
+      <input id="admin-real-image" type="url" placeholder="실제 사진 이미지 URL">
+      <input id="admin-anime-image" type="url" placeholder="작품(애니/영화/드라마) 이미지 URL">
+      <p class="form-error" id="admin-place-error"></p>
+      <div class="modal-actions">
+        <button type="submit" id="admin-place-submit-btn" class="primary-btn">장소 등록</button>
+        <button type="button" id="admin-place-reset-btn" class="link-btn" hidden>수정 취소</button>
+      </div>
+    </form>
+
+    <hr class="divider">
+    <div class="detail-header">
+      <h3>전체 장소 (<span id="admin-place-count">0</span>건)</h3>
+      <a id="admin-download-csv-btn" class="link-btn" href="/api/admin/places/download">⬇ CSV 다운로드</a>
+      <a id="admin-download-excel-btn" class="link-btn" href="/api/admin/places/download/excel">⬇ 엑셀 다운로드</a>
+    </div>
+    <div id="admin-place-list" class="admin-place-list"></div>
+  </div>
+</dialog>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+  // ---------- 페이지 전환 로직 ----------
+  (function () {
+    const tab1 = document.getElementById('page-tab-1');
+    const tab2 = document.getElementById('page-tab-2');
+    const page1 = document.getElementById('page-1');
+    const page2 = document.getElementById('page-2');
+
+    function showPage(n) {
+      const isPage1 = n === 1;
+      page1.hidden = !isPage1;
+      page2.hidden = isPage1;
+      tab1.classList.toggle('active', isPage1);
+      tab2.classList.toggle('active', !isPage1);
+      tab1.setAttribute('aria-selected', String(isPage1));
+      tab2.setAttribute('aria-selected', String(!isPage1));
+
+      // app.js 쪽에서 참조할 수 있도록 커스텀 이벤트 발행
+      document.dispatchEvent(new CustomEvent('pagechange', { detail: { page: n } }));
+    }
+
+    tab1.addEventListener('click', () => showPage(1));
+    tab2.addEventListener('click', () => showPage(2));
+  })();
+</script>
+<script src="/js/app.js"></script>
+</body>
+</html>
